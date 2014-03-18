@@ -11,6 +11,14 @@ MOVEMENT_SPEED = 5
 BACKGROUND1CENTER = (400,300)
 vx = (0, 0)
 vy = (0, 0)
+FACING_FORWARD = 0
+FACING_RIGHT = 1
+FACING_DOWN = 2
+FACING_LEFT = 3
+FACING_UPLEFT = 4
+FACING_DWNLEFT = 5
+FACING_UPRIGHT = 6
+FACING_DWNRIGHT = 7
 
 pygame.init()
  
@@ -18,7 +26,7 @@ Icon = pygame.image.load("Icon.png")
 pygame.display.set_caption("Blazer: Trails Unknown")
 pygame.display.set_icon(Icon)
 
-facings = [pygame.image.load("tux.png"), pygame.image.load("tuxright.png"), pygame.image.load("tuxdown.png"), pygame.image.load("tuxleft.png"), pygame.image.load("tuxupleft.png"), pygame.image.load("tuxdwnlft.png"), pygame.image.load("tuxupright.png"), pygame.image.load("tuxdownright.png")]
+facings = [ pygame.image.load("tux.png"), pygame.image.load("tuxright.png"), pygame.image.load("tuxdown.png"), pygame.image.load("tuxleft.png"), pygame.image.load("tuxupleft.png"), pygame.image.load("tuxdwnlft.png"), pygame.image.load("tuxupright.png"), pygame.image.load("tuxdownright.png")]
 
 screen = pygame.display.set_mode(size) 
 background1= pygame.image.load('background1.png')
@@ -69,13 +77,13 @@ while True:
             if event.key == K_ESCAPE:
                 sys.exit()
             elif event.key == K_w:
-                vy = (0, -5)
+                vy = (0, -MOVEMENT_SPEED)
             elif event.key == K_s:
-                vy = (0, 5)
+                vy = (0, MOVEMENT_SPEED)
             elif event.key == K_a:
-                vx = (-5, 0)
+                vx = (-MOVEMENT_SPEED, 0)
             elif event.key == K_d:
-                vx = (5, 0)
+                vx = (MOVEMENT_SPEED, 0)
         if event.type == KEYUP:
             if event.key == K_w:
                 vy = (0, 0)
@@ -91,23 +99,23 @@ while True:
     clamped_camera_rect = camera_rect.clamp(background1.get_rect())
     if vx > (0, 0):
         if vy > (0, 0):
-            tux = facings[7]
+            tux = facings[FACING_DWNRIGHT]
         elif vy < (0, 0):
-            tux = facings[6]
+            tux = facings[FACING_UPRIGHT]
         else:
-            tux = facings[1]
+            tux = facings[FACING_RIGHT]
     elif vx < (0, 0):
         if vy > (0, 0):
-            tux = facings[5]
+            tux = facings[FACING_DWNLEFT]
         elif vy < (0, 0):
-            tux = facings[4]
+            tux = facings[FACING_UPLEFT]
         else:
-            tux = facings[3]
+            tux = facings[FACING_LEFT]
     else:
         if vy > (0, 0):
-            tux = facings[2]
+            tux = facings[FACING_DOWN]
         elif vy < (0, 0):
-            tux = facings[0]
+            tux = facings[FACING_FORWARD]
     
     screen.blit(background1, vector.subtracting((0,0), camera_corner))
     screen.blit(tux, vector.subtracting(tux_loc, clamped_camera_rect.topleft))
