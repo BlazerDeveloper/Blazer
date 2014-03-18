@@ -45,19 +45,18 @@ title = pygame.image.load("title.png")
 titleRect = title.get_rect(centerx=400, centery=200)
 button2 = pygame.image.load('Quitbutton.png')
 button2Rect = button.get_rect(centerx=400, centery=500)
+
 pygame.display.flip()
 
 start = False
-def draw_titlescreen():
-    while not start:
-                pygame.display.toggle_fullscreen()
-                screen.fill((0, 255, 0))
-                screen.blit(title, titleRect)
-                screen.blit(button, buttonRect)
-                screen.blit(button2, button2Rect)
-                pygame.display.update()
-def handle_titlescreen_input():
-    while not start:
+
+
+
+
+
+def do_titlescreen():
+    running = True
+    def handle_titlescreen_input():
         for event in pygame.event.get():
                     mousePos = pygame.mouse.get_pos()
                     if event.type == pygame.QUIT:
@@ -67,12 +66,39 @@ def handle_titlescreen_input():
                     if event.type == buttonRect.collidepoint(mousePos):
                         button = pygame.image.load('startbuttonp.png')
                     if event.type == MOUSEBUTTONDOWN and buttonRect.collidepoint(mousePos):
-                        start = True
+                        running = False
                     else:
                         if event.type == buttonRect.collidepoint(mousePos):
                             button = pygame.image.load("startbuttonp.png")
-def handle_ingame_input():
-    while start:
+        return running
+    def draw_titlescreen():
+        running = True
+        while running:
+                pygame.display.toggle_fullscreen()
+                screen.fill((0, 255, 0))
+                screen.blit(title, titleRect)
+                screen.blit(button, buttonRect)
+                screen.blit(button2, button2Rect)
+                pygame.display.update()
+
+    while running:
+        handle_titlescreen_input()
+        draw_titlescreen()
+
+def do_ingame():
+    running = True
+    
+    def draw_ingame():           
+        tux_loc = vector.adding(tux_loc, vector.adding(vx, vy))
+        camera_corner = vector.subtracting(tux_loc, half_screen)
+        camera_rect = pygame.Rect(camera_corner, size)
+        clamped_camera_rect = camera_rect.clamp(background1.get_rect())
+        screen.blit(background1, vector.subtracting((0,0), camera_corner))
+        screen.blit(tux, vector.subtracting(tux_loc, clamped_camera_rect.topleft))
+        screen.blit(walltop, vector.subtracting((5,5),camera_corner))
+        pygame.display.flip()
+        
+    def handle_ingame_input():
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 sys.exit()
@@ -115,17 +141,6 @@ def handle_ingame_input():
                 tux = facings[FACING_DOWN]
             elif vy < (0, 0):
                 tux = facings[FACING_FORWARD]
-def draw_ingame():           
-    while start:
-        if walltop_rect.colliderect(tux_rect):
-            tux_loc = (600, 400)
-        
-        tux_loc = vector.adding(tux_loc, vector.adding(vx, vy))
-        camera_corner = vector.subtracting(tux_loc, half_screen)
-        camera_rect = pygame.Rect(camera_corner, size)
-        clamped_camera_rect = camera_rect.clamp(background1.get_rect())
-        screen.blit(background1, vector.subtracting((0,0), camera_corner))
-        screen.blit(tux, vector.subtracting(tux_loc, clamped_camera_rect.topleft))
-        screen.blit(walltop, vector.subtracting((5,5),camera_corner))
-        pygame.display.flip()
-        
+
+    while running:
+        do_ingame()

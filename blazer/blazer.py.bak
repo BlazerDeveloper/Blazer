@@ -45,9 +45,11 @@ title = pygame.image.load("title.png")
 titleRect = title.get_rect(centerx=400, centery=200)
 button2 = pygame.image.load('Quitbutton.png')
 button2Rect = button.get_rect(centerx=400, centery=500)
+
 pygame.display.flip()
 
 start = False
+
 def draw_titlescreen():
     while not start:
                 pygame.display.toggle_fullscreen()
@@ -56,23 +58,25 @@ def draw_titlescreen():
                 screen.blit(button, buttonRect)
                 screen.blit(button2, button2Rect)
                 pygame.display.update()
+
 def handle_titlescreen_input():
-    while not start:
-        for event in pygame.event.get():
-                    mousePos = pygame.mouse.get_pos()
-                    if event.type == pygame.QUIT:
-                        sys.exit()
-                    if event.type == MOUSEBUTTONDOWN and button2Rect.collidepoint(mousePos):
-                        sys.exit()
+    running = True
+    for event in pygame.event.get():
+                mousePos = pygame.mouse.get_pos()
+                if event.type == pygame.QUIT:
+                    sys.exit()
+                if event.type == MOUSEBUTTONDOWN and button2Rect.collidepoint(mousePos):
+                    sys.exit()
+                if event.type == buttonRect.collidepoint(mousePos):
+                    button = pygame.image.load('startbuttonp.png')
+                if event.type == MOUSEBUTTONDOWN and buttonRect.collidepoint(mousePos):
+                    running = False
+                else:
                     if event.type == buttonRect.collidepoint(mousePos):
-                        button = pygame.image.load('startbuttonp.png')
-                    if event.type == MOUSEBUTTONDOWN and buttonRect.collidepoint(mousePos):
-                        start = True
-                    else:
-                        if event.type == buttonRect.collidepoint(mousePos):
-                            button = pygame.image.load("startbuttonp.png")
+                        button = pygame.image.load("startbuttonp.png")
+    return running
+
 def handle_ingame_input():
-    while start:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 sys.exit()
@@ -116,10 +120,6 @@ def handle_ingame_input():
             elif vy < (0, 0):
                 tux = facings[FACING_FORWARD]
 def draw_ingame():           
-    while start:
-        if walltop_rect.colliderect(tux_rect):
-            tux_loc = (600, 400)
-        
         tux_loc = vector.adding(tux_loc, vector.adding(vx, vy))
         camera_corner = vector.subtracting(tux_loc, half_screen)
         camera_rect = pygame.Rect(camera_corner, size)
@@ -128,4 +128,18 @@ def draw_ingame():
         screen.blit(tux, vector.subtracting(tux_loc, clamped_camera_rect.topleft))
         screen.blit(walltop, vector.subtracting((5,5),camera_corner))
         pygame.display.flip()
-        
+
+def do_titlescreen():
+    running = True
+    while running:
+        handle_titlescreen_input()
+        draw_titlescreen()
+
+def do_ingame():
+    running = True
+    while running:
+        handle_ingame_input()
+        draw_ingame()
+
+do_titlescreen()
+do_ingame()
