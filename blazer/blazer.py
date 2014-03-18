@@ -48,78 +48,84 @@ button2Rect = button.get_rect(centerx=400, centery=500)
 pygame.display.flip()
 
 start = False
-while not start:
+def draw_titlescreen():
+    while not start:
+                pygame.display.toggle_fullscreen()
+                screen.fill((0, 255, 0))
+                screen.blit(title, titleRect)
+                screen.blit(button, buttonRect)
+                screen.blit(button2, button2Rect)
+                pygame.display.update()
+def handle_titlescreen_input():
+    while not start:
         for event in pygame.event.get():
-            mousePos = pygame.mouse.get_pos()
+                    mousePos = pygame.mouse.get_pos()
+                    if event.type == pygame.QUIT:
+                        sys.exit()
+                    if event.type == MOUSEBUTTONDOWN and button2Rect.collidepoint(mousePos):
+                        sys.exit()
+                    if event.type == buttonRect.collidepoint(mousePos):
+                        button = pygame.image.load('startbuttonp.png')
+                    if event.type == MOUSEBUTTONDOWN and buttonRect.collidepoint(mousePos):
+                        start = True
+                    else:
+                        if event.type == buttonRect.collidepoint(mousePos):
+                            button = pygame.image.load("startbuttonp.png")
+def handle_ingame_input():
+    while start:
+        for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 sys.exit()
-            if event.type == MOUSEBUTTONDOWN and button2Rect.collidepoint(mousePos):
-                sys.exit()
-            if event.type == buttonRect.collidepoint(mousePos):
-                button = pygame.image.load('startbuttonp.png')
-            if event.type == MOUSEBUTTONDOWN and buttonRect.collidepoint(mousePos):
-                start = True
+            if event.type == KEYDOWN:
+                if event.key == K_ESCAPE:
+                    sys.exit()
+                elif event.key == K_w:
+                    vy = (0, -MOVEMENT_SPEED)
+                elif event.key == K_s:
+                    vy = (0, MOVEMENT_SPEED)
+                elif event.key == K_a:
+                    vx = (-MOVEMENT_SPEED, 0)
+                elif event.key == K_d:
+                    vx = (MOVEMENT_SPEED, 0)
+            if event.type == KEYUP:
+                if event.key == K_w:
+                    vy = (0, 0)
+                if event.key == K_s:
+                    vy = (0, 0)
+                if event.key == K_a:
+                    vx = (0, 0)
+                if event.key == K_d:
+                    vx = (0, 0)
+        if vx > (0, 0):
+            if vy > (0, 0):
+                tux = facings[FACING_DWNRIGHT]
+            elif vy < (0, 0):
+                tux = facings[FACING_UPRIGHT]
+            else:
+                tux = facings[FACING_RIGHT]
+        elif vx < (0, 0):
+            if vy > (0, 0):
+                tux = facings[FACING_DWNLEFT]
+            elif vy < (0, 0):
+                tux = facings[FACING_UPLEFT]
+            else:
+                tux = facings[FACING_LEFT]
         else:
-            if event.type == buttonRect.collidepoint(mousePos):
-                button = pygame.image.load("startbuttonp.png")
-            pygame.display.toggle_fullscreen()
-            screen.fill((0, 255, 0))
-            screen.blit(title, titleRect)
-            screen.blit(button, buttonRect)
-            screen.blit(button2, button2Rect)
-            pygame.display.update()
-           
-while True:
-    for event in pygame.event.get():
-        if event.type == pygame.QUIT:
-            sys.exit()
-        if event.type == KEYDOWN:
-            if event.key == K_ESCAPE:
-                sys.exit()
-            elif event.key == K_w:
-                vy = (0, -MOVEMENT_SPEED)
-            elif event.key == K_s:
-                vy = (0, MOVEMENT_SPEED)
-            elif event.key == K_a:
-                vx = (-MOVEMENT_SPEED, 0)
-            elif event.key == K_d:
-                vx = (MOVEMENT_SPEED, 0)
-        if event.type == KEYUP:
-            if event.key == K_w:
-                vy = (0, 0)
-            if event.key == K_s:
-                vy = (0, 0)
-            if event.key == K_a:
-                vx = (0, 0)
-            if event.key == K_d:
-                vx = (0, 0)
-    tux_loc = vector.adding(tux_loc, vector.adding(vx, vy))
-    camera_corner = vector.subtracting(tux_loc, half_screen)
-    camera_rect = pygame.Rect(camera_corner, size)
-    clamped_camera_rect = camera_rect.clamp(background1.get_rect())
-    if vx > (0, 0):
-        if vy > (0, 0):
-            tux = facings[FACING_DWNRIGHT]
-        elif vy < (0, 0):
-            tux = facings[FACING_UPRIGHT]
-        else:
-            tux = facings[FACING_RIGHT]
-    elif vx < (0, 0):
-        if vy > (0, 0):
-            tux = facings[FACING_DWNLEFT]
-        elif vy < (0, 0):
-            tux = facings[FACING_UPLEFT]
-        else:
-            tux = facings[FACING_LEFT]
-    else:
-        if vy > (0, 0):
-            tux = facings[FACING_DOWN]
-        elif vy < (0, 0):
-            tux = facings[FACING_FORWARD]
-    
-    screen.blit(background1, vector.subtracting((0,0), camera_corner))
-    screen.blit(tux, vector.subtracting(tux_loc, clamped_camera_rect.topleft))
-    screen.blit(walltop, vector.subtracting((5,5),camera_corner))
-    pygame.display.flip()
-    if walltop_rect.colliderect(tux_rect):
-        tux_loc = (600, 400)
+            if vy > (0, 0):
+                tux = facings[FACING_DOWN]
+            elif vy < (0, 0):
+                tux = facings[FACING_FORWARD]
+def draw_ingame():           
+    while start:
+        if walltop_rect.colliderect(tux_rect):
+            tux_loc = (600, 400)
+        
+        tux_loc = vector.adding(tux_loc, vector.adding(vx, vy))
+        camera_corner = vector.subtracting(tux_loc, half_screen)
+        camera_rect = pygame.Rect(camera_corner, size)
+        clamped_camera_rect = camera_rect.clamp(background1.get_rect())
+        screen.blit(background1, vector.subtracting((0,0), camera_corner))
+        screen.blit(tux, vector.subtracting(tux_loc, clamped_camera_rect.topleft))
+        screen.blit(walltop, vector.subtracting((5,5),camera_corner))
+        pygame.display.flip()
+        
