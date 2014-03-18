@@ -2,16 +2,6 @@ import sys, pygame
 from pygame.locals import *
 import vector
 
-DIVISION = 2
-TUX_STARTING_LOC = (700, 300)
-NOTHING = (-1, -1)
-tux_loc = (700, 300)
-DISPLAY_SIZE = DISPLAY_WIDTH, DISPLAY_HEIGHT = 800, 600
-MOVEMENT_SPEED = 5
-BACKGROUND1CENTER = (400,300)
-vx = (0, 0)
-vy = (0, 0)
-
 pygame.init()
  
 Icon = pygame.image.load("Icon.png")
@@ -19,10 +9,18 @@ pygame.display.set_caption("Blazer: Trails Unknown")
 pygame.display.set_icon(Icon)
 
 facings = [pygame.image.load("tux.png"), pygame.image.load("tuxright.png"), pygame.image.load("tuxdown.png"), pygame.image.load("tuxleft.png"), pygame.image.load("tuxupleft.png"), pygame.image.load("tuxdwnlft.png"), pygame.image.load("tuxupright.png"), pygame.image.load("tuxdownright.png")]
+ 
+division = 2
 
+tux_loc = (700, 300)
+ 
+nothing = (-1, -1)
+
+size = width, height = 800, 600
 screen = pygame.display.set_mode(size) 
 background1= pygame.image.load('background1.png')
-background1_rect = background1.get_rect(centerx=400, centery=300)
+background1center = (400, 300)
+background1_rect = background1.get_rect()
 half_screen = vector.dividing(size, division)
 tux = facings[2]
 walltop = pygame.image.load("walltop.png")
@@ -38,6 +36,8 @@ titleRect = title.get_rect(centerx=400, centery=200)
 button2 = pygame.image.load('Quitbutton.png')
 button2Rect = button.get_rect(centerx=400, centery=500)
 pygame.display.flip()
+vx = (0, 0)
+vy = (0, 0)
 
 start = False
 while not start:
