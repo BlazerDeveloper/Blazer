@@ -4,6 +4,7 @@ import vector
 import os
 from pygame.locals import *
 
+
 DIVISION = 2
 TUX_STARTING_LOC = (700, 300)
 NOTHING = (-1, -1)
@@ -11,8 +12,6 @@ tux_loc = (700, 300)
 DISPLAY_SIZE = DISPLAY_WIDTH, DISPLAY_HEIGHT = 800, 600
 MOVEMENT_SPEED = 5
 BACKGROUND1CENTER = (400, 300)
-vx = (0, 0)
-vy = (0, 0)
 FACING_FORWARD = 0
 FACING_RIGHT = 1
 FACING_DOWN = 2
@@ -28,13 +27,6 @@ facing_files = ["tux.png", "tuxright.png", "tuxdown.png", "tuxleft.png", 'tuxupl
 
 def load_image(filename):
     return pygame.image.load(os.path.join("resources", filename))
-screen = pygame.display.set_mode(DISPLAY_SIZE)
-icon = load_image("Icon.png")
-pygame.display.set_caption("Blazer: Trails Unknown")
-pygame.display.set_icon(icon)
-pygame.display.toggle_fullscreen()
-
-
 
 
 class Titlescreen:
@@ -50,7 +42,6 @@ class Titlescreen:
         self.button2 = load_image('Quitbutton.png')
         self.button2Rect = self.button.get_rect(centerx=400, centery=500)
 
-
     def handle_input(self):
         mousePos = pygame.mouse.get_pos()
 
@@ -63,9 +54,8 @@ class Titlescreen:
                 self.running = False
             if self.buttonRect.collidepoint(mousePos):
                 self.button = load_image("Startbuttonp.png")
-            if self.buttonRect.collidepoint(mousePos) == False:
+            if not self.buttonRect.collidepoint(mousePos):
                 self.button = load_image("startbutton.png")
-
 
     def draw(self):
         screen.fill((0, 255, 0))
@@ -73,12 +63,12 @@ class Titlescreen:
         screen.blit(self.button, self.buttonRect)
         screen.blit(self.button2, self.button2Rect)
 
-
     def run(self):
         while self.running:
             self.handle_input()
             self.draw()
             pygame.display.flip()
+
 
 class Ingame:
     def __init__(self):
@@ -89,9 +79,9 @@ class Ingame:
         self.half_screen = vector.dividing(DISPLAY_SIZE, DIVISION)
         self.walltop = load_image("walltop.png")
         self.tux = self.facings[FACING_DOWN]
-        self.tux_rect = self.tux.get_rect(TUX_STARTING_LOC)
-
-    # this is the main loop for the game
+        self.tux_rect = self.tux.get_rect()
+        self.vx = (0, 0)
+        self.vy = (0, 0)
 
     def draw(self):
         self.tux_loc = vector.adding(self.tux_loc, vector.adding(vx, vy))
@@ -111,43 +101,42 @@ class Ingame:
                 if event.key == K_ESCAPE:
                     sys.exit()
                 elif event.key == K_w:
-                    vy = (0, -MOVEMENT_SPEED)
+                    self.vy = (0, -MOVEMENT_SPEED)
                 elif event.key == K_s:
-                    vy = (0, MOVEMENT_SPEED)
+                    self.vy = (0, MOVEMENT_SPEED)
                 elif event.key == K_a:
-                    vx = (-MOVEMENT_SPEED, 0)
+                    self.vx = (-MOVEMENT_SPEED, 0)
                 elif event.key == K_d:
-                    vx = (MOVEMENT_SPEED, 0)
+                    self.vx = (MOVEMENT_SPEED, 0)
             if event.type == KEYUP:
                 if event.key == K_w:
-                    vy = (0, 0)
+                    self.vy = (0, 0)
                 if event.key == K_s:
-                    vy = (0, 0)
+                    self.vy = (0, 0)
                 if event.key == K_a:
-                    vx = (0, 0)
+                    self.vx = (0, 0)
                 if event.key == K_d:
-                    vx = (0, 0)
+                    self.vx = (0, 0)
 
-            if vx > (0, 0):
-                if vy > (0, 0):
-                    tux = self.facings[FACING_DWNRIGHT]
-                elif vy < (0, 0):
-                    tux = self.facings[FACING_UPRIGHT]
+            if self.vx > (0, 0):
+                if self.vy > (0, 0):
+                    self.tux = self.facings[FACING_DWNRIGHT]
+                elif self.vy < (0, 0):
+                    self.tux = self.facings[FACING_UPRIGHT]
                 else:
-                    tux = self.facings[FACING_RIGHT]
-            elif vx < (0, 0):
-                if vy > (0, 0):
-                    tux = self.facings[FACING_DWNLEFT]
-                elif vy < (0, 0):
-                    tux = self.facings[FACING_UPLEFT]
+                    self.tux = self.facings[FACING_RIGHT]
+            elif self.vx < (0, 0):
+                if self.vy > (0, 0):
+                    self.tux = self.facings[FACING_DWNLEFT]
+                elif self.vy < (0, 0):
+                    self.ttux = self.facings[FACING_UPLEFT]
                 else:
-                    tux = self.facings[FACING_LEFT]
+                    self.ttux = self.facings[FACING_LEFT]
             else:
-                if vy > (0, 0):
-                    tux = self.facings[FACING_DOWN]
-                elif vy < (0, 0):
-                    tux = self.facings[FACING_FORWARD]
-
+                if self.vy > (0, 0):
+                    self.ttux = self.facings[FACING_DOWN]
+                elif self.vy < (0, 0):
+                    self.ttux = self.facings[FACING_FORWARD]
 
     def run(self):
         while self.running:
@@ -158,6 +147,12 @@ class Ingame:
 
 if __name__ == "__main__":
     pygame.init()
+    screen = pygame.display.set_mode(DISPLAY_SIZE)
+    icon = load_image("Icon.png")
+    pygame.display.set_caption("Blazer: Trails Unknown")
+    pygame.display.set_icon(icon)
+    pygame.display.toggle_fullscreen()
+
     titlescreen = Titlescreen()
     titlescreen.run()
     ingame = Ingame()
