@@ -10,7 +10,7 @@ NOTHING = (-1, -1)
 tux_loc = (700, 300)
 DISPLAY_SIZE = DISPLAY_WIDTH, DISPLAY_HEIGHT = 800, 600
 MOVEMENT_SPEED = 5
-BACKGROUND1CENTER = (400,300)
+BACKGROUND1CENTER = (400, 300)
 vx = (0, 0)
 vy = (0, 0)
 FACING_FORWARD = 0
@@ -22,57 +22,53 @@ FACING_DWNLEFT = 5
 FACING_UPRIGHT = 6
 FACING_DWNRIGHT = 7
 
-facing_files = ["tux.png","tuxright.png","tuxdown.png","tuxleft.png",'tuxupleft.png','tuxdwnleft.png','tuxupright.png','tuxdwnright.png']
+facing_files = ["tux.png", "tuxright.png", "tuxdown.png", "tuxleft.png", 'tuxupleft.png', 'tuxdwnleft.png',
+                'tuxupright.png', 'tuxdwnright.png']
 
 
 def load_image(filename):
-    return pygame.image.load(os.path.join ("resources",filename))
+    return pygame.image.load(os.path.join("resources", filename))
 
 
-
-class Titlescreen():
-     def __init__(self):
+class Titlescreen:
+    def __init__(self):
         self.running = True
 
         self.button = load_image('Startbutton.png')
         self.buttonRect = self.button.get_rect(centerx=400, centery=400)
 
         self.title = load_image("Title.png")
-        self.titleRect = title.get_rect(centerx=400, centery=200)
+        self.titleRect = self.title.get_rect(centerx=400, centery=200)
 
         self.button2 = load_image('Quitbutton.png')
-        self.button2Rect = button.get_rect(centerx=400, centery=500)
-
-        def init():
-            # do all the loading for your titlescreen here
-            pass
-
-        def handle_input():
-
-            self.mousePos = pygame.mouse.get_pos()
-
-            for event in pygame.event.get():
-                if event.type == pygame.QUIT:
-                    sys.exit()
-                if event.type == MOUSEBUTTONDOWN and self.button2Rect.collidepoint(mousePos):
-                    sys.exit()
-                if event.type == MOUSEBUTTONDOWN and self.buttonRect.collidepoint(mousePos):
-                    running = False
-                if buttonRect.collidepoint(mousePos):
-                    button = load_image("Startbuttonp.png")
-
-        def draw():
-            screen.fill((0, 255, 0))
-            screen.blit(title, titleRect)
-            screen.blit(button, buttonRect)
-            screen.blit(button2, button2Rect)
+        self.button2Rect = self.button.get_rect(centerx=400, centery=500)
 
 
-        # the main loop for the titlescreen
-        init()
-        while running:
-            handle_input()
-            draw()
+    def handle_input(self):
+        mousePos = pygame.mouse.get_pos()
+
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                sys.exit()
+            if event.type == MOUSEBUTTONDOWN and self.button2Rect.collidepoint(mousePos):
+                sys.exit()
+            if event.type == MOUSEBUTTONDOWN and self.buttonRect.collidepoint(mousePos):
+                self.running = False
+            if self.buttonRect.collidepoint(mousePos):
+                self.button = load_image("Startbuttonp.png")
+
+
+    def draw(self):
+        screen.fill((0, 255, 0))
+        screen.blit(self.title, self.titleRect)
+        screen.blit(self.button, self.buttonRect)
+        screen.blit(self.button2, self.button2Rect)
+
+
+    def run(self):
+        while self.running:
+            self.handle_input()
+            self.draw()
             pygame.display.flip()
 
 
@@ -88,9 +84,9 @@ def do_ingame():
         camera_corner = vector.subtracting(tux_loc, half_screen)
         camera_rect = pygame.Rect(camera_corner, size)
         clamped_camera_rect = camera_rect.clamp(background1.get_rect())
-        screen.blit(background1, vector.subtracting((0,0), camera_corner))
+        screen.blit(background1, vector.subtracting((0, 0), camera_corner))
         screen.blit(tux, vector.subtracting(tux_loc, clamped_camera_rect.topleft))
-        screen.blit(walltop, vector.subtracting((5,5),camera_corner))
+        screen.blit(walltop, vector.subtracting((5, 5), camera_corner))
         pygame.display.flip()
 
     def handle_input():
@@ -139,8 +135,8 @@ def do_ingame():
                     tux = facings[FACING_FORWARD]
 
 
-    facings = [ load_image(x) for x in facing_files]
-    background1= load_image('background1.png')
+    facings = [load_image(x) for x in facing_files]
+    background1 = load_image('background1.png')
     background1_rect = background1.get_rect(centerx=400, centery=300)
     half_screen = vector.dividing(DISPLAY_SIZE, DIVISION)
 
@@ -157,6 +153,7 @@ def do_ingame():
         handle_input()
         draw()
         pygame.display.flip()
+
 
 if __name__ == "__main__":
     pygame.init()
