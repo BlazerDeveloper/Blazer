@@ -22,12 +22,19 @@ FACING_DWNLEFT = 5
 FACING_UPRIGHT = 6
 FACING_DWNRIGHT = 7
 
-facing_files = ["tux.png", "tuxright.png", "tuxdown.png", "tuxleft.png", 'tuxupleft.png', 'tuxdwnleft.png',
-                'tuxupright.png', 'tuxdwnright.png']
+facing_files = ["tux.png", "tuxright.png", "tuxdown.png", "tuxleft.png", 'tuxupleft.png', 'tuxdwnlft.png',
+                'tuxupright.png', 'tuxdownright.png']
 
 
 def load_image(filename):
     return pygame.image.load(os.path.join("resources", filename))
+screen = pygame.display.set_mode(DISPLAY_SIZE)
+icon = load_image("Icon.png")
+pygame.display.set_caption("Blazer: Trails Unknown")
+pygame.display.set_icon(icon)
+pygame.display.toggle_fullscreen()
+
+
 
 
 class Titlescreen:
@@ -56,6 +63,8 @@ class Titlescreen:
                 self.running = False
             if self.buttonRect.collidepoint(mousePos):
                 self.button = load_image("Startbuttonp.png")
+            if self.buttonRect.collidepoint(mousePos) == False:
+                self.button = load_image("startbutton.png")
 
 
     def draw(self):
@@ -71,25 +80,30 @@ class Titlescreen:
             self.draw()
             pygame.display.flip()
 
+class Ingame:
+    def __init__(self):
+        self.running = True
+        self.facings = [load_image(x) for x in facing_files]
+        self.background1 = load_image('background1.png')
+        self.background1_rect = self.background1.get_rect(centerx=400, centery=300)
+        self.half_screen = vector.dividing(DISPLAY_SIZE, DIVISION)
+        self.walltop = load_image("walltop.png")
+        self.tux = self.facings[FACING_DOWN]
+        self.tux_rect = self.tux.get_rect(TUX_STARTING_LOC)
 
-def do_ingame():
-    running = True
+    # this is the main loop for the game
 
-    def init():
-        # do all your image loading for the game here
-        pass
-
-    def draw():
-        tux_loc = vector.adding(tux_loc, vector.adding(vx, vy))
-        camera_corner = vector.subtracting(tux_loc, half_screen)
-        camera_rect = pygame.Rect(camera_corner, size)
+    def draw(self):
+        self.tux_loc = vector.adding(self.tux_loc, vector.adding(vx, vy))
+        self.camera_corner = vector.subtracting(self.tux_loc, self.half_screen)
+        self.camera_rect = pygame.Rect(self.camera_corner, size)
         clamped_camera_rect = camera_rect.clamp(background1.get_rect())
-        screen.blit(background1, vector.subtracting((0, 0), camera_corner))
-        screen.blit(tux, vector.subtracting(tux_loc, clamped_camera_rect.topleft))
-        screen.blit(walltop, vector.subtracting((5, 5), camera_corner))
+        screen.blit(self.background1, vector.subtracting((0, 0), camera_corner))
+        screen.blit(self.tux, vector.subtracting(tux_loc, clamped_camera_rect.topleft))
+        screen.blit(self.walltop, vector.subtracting((5, 5), camera_corner))
         pygame.display.flip()
 
-    def handle_input():
+    def handle_input(self):
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 sys.exit()
@@ -116,54 +130,35 @@ def do_ingame():
 
             if vx > (0, 0):
                 if vy > (0, 0):
-                    tux = facings[FACING_DWNRIGHT]
+                    tux = self.facings[FACING_DWNRIGHT]
                 elif vy < (0, 0):
-                    tux = facings[FACING_UPRIGHT]
+                    tux = self.facings[FACING_UPRIGHT]
                 else:
-                    tux = facings[FACING_RIGHT]
+                    tux = self.facings[FACING_RIGHT]
             elif vx < (0, 0):
                 if vy > (0, 0):
-                    tux = facings[FACING_DWNLEFT]
+                    tux = self.facings[FACING_DWNLEFT]
                 elif vy < (0, 0):
-                    tux = facings[FACING_UPLEFT]
+                    tux = self.facings[FACING_UPLEFT]
                 else:
-                    tux = facings[FACING_LEFT]
+                    tux = self.facings[FACING_LEFT]
             else:
                 if vy > (0, 0):
-                    tux = facings[FACING_DOWN]
+                    tux = self.facings[FACING_DOWN]
                 elif vy < (0, 0):
-                    tux = facings[FACING_FORWARD]
+                    tux = self.facings[FACING_FORWARD]
 
 
-    facings = [load_image(x) for x in facing_files]
-    background1 = load_image('background1.png')
-    background1_rect = background1.get_rect(centerx=400, centery=300)
-    half_screen = vector.dividing(DISPLAY_SIZE, DIVISION)
-
-    walltop = load_image("walltop.png")
-    walltop_size = pygame.Surface.get_size(walltop)
-    walltop_rect = walltop.get_rect(walltop_size)
-
-    tux = facings[FACING_DOWN]
-    tux_rect = tux.get_rect(TUX_STARTING_LOC)
-
-    # this is the main loop for the game
-    init()
-    while running:
-        handle_input()
-        draw()
-        pygame.display.flip()
+    def run(self):
+        while self.running:
+            self.handle_input()
+            self.draw()
+            pygame.display.flip()
 
 
 if __name__ == "__main__":
     pygame.init()
-
-    screen = pygame.display.set_mode(DISPLAY_SIZE)
-    icon = load_image("Icon.png")
-
-    pygame.display.set_caption("Blazer: Trails Unknown")
-    pygame.display.set_icon(icon)
-    pygame.display.toggle_fullscreen()
-
-    do_titlescreen()
-    do_ingame()
+    titlescreen = Titlescreen()
+    titlescreen.run()
+    ingame = Ingame()
+    ingame.run()
