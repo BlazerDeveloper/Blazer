@@ -26,33 +26,33 @@ Icon = pygame.image.load("Icon.png")
 pygame.display.set_caption("Blazer: Trails Unknown")
 pygame.display.set_icon(Icon)
 
-facings = [ pygame.image.load("tux.png"), pygame.image.load("tuxright.png"), pygame.image.load("tuxdown.png"), pygame.image.load("tuxleft.png"), pygame.image.load("tuxupleft.png"), pygame.image.load("tuxdwnlft.png"), pygame.image.load("tuxupright.png"), pygame.image.load("tuxdownright.png")]
+facings = [ pygame.image.load(os.path.join("resources","tux.png")), pygame.image.load(os.path.join("resources","tuxright.png")), pygame.image.load(os.path.join("resources","tuxdown.png")), pygame.image.load(os.path.join("resources","tuxleft.png")), pygame.image.load(os.path.join("resources","tuxupleft.png")), pygame.image.load(os.path.join("resources","tuxdwnlft.png")), pygame.image.load(os.path.join("resources","tuxupright.png")), pygame.image.load(os.path.join("resources","tuxdownright.png"))]
 
-screen = pygame.display.set_mode(size) 
-background1= pygame.image.load('background1.png')
+screen = pygame.display.set_mode(DISPLAY_SIZE) 
+background1= pygame.image.load(os.path.join("resources",'background1.png'))
 background1_rect = background1.get_rect(centerx=400, centery=300)
-half_screen = vector.dividing(size, division)
-tux = facings[2]
-walltop = pygame.image.load("walltop.png")
-walltop_size = pygame.Surface.get_size(walltop)
+half_screen = vector.dividing(DISPLAY_SIZE, DIVISION)
 
-tux_rect = tux.get_rect(tux_loc)
+walltop = pygame.image.load(os.path.join("resources","walltop.png"))
+walltop_size = pygame.Surface.get_size(walltop)
 walltop_rect = walltop.get_rect(walltop_size)
 
-button = pygame.image.load('Startbutton.png')
+tux = facings[FACING_DOWN]
+tux_rect = tux.get_rect(TUX_STARTING_LOC)
+
+
+button = pygame.image.load(os.path.join("resources",'Startbutton.png'))
 buttonRect = button.get_rect(centerx=400, centery=400)
-title = pygame.image.load("title.png")
+
+title = pygame.image.load(os.path.join("resources","title.png"))
 titleRect = title.get_rect(centerx=400, centery=200)
-button2 = pygame.image.load('Quitbutton.png')
+
+button2 = pygame.image.load(os.path.join("resources",'Quitbutton.png'))
 button2Rect = button.get_rect(centerx=400, centery=500)
 
+buttonp = pygame.image.load(os.path.join("resources","startbuttonp.png"))
+
 pygame.display.flip()
-
-start = False
-
-
-
-
 
 def do_titlescreen():
     running = True
@@ -64,12 +64,12 @@ def do_titlescreen():
                     if event.type == MOUSEBUTTONDOWN and button2Rect.collidepoint(mousePos):
                         sys.exit()
                     if event.type == buttonRect.collidepoint(mousePos):
-                        button = pygame.image.load('startbuttonp.png')
+                        button = pygame.image.load(os.path.join("resources",'startbuttonp.png'))
                     if event.type == MOUSEBUTTONDOWN and buttonRect.collidepoint(mousePos):
                         running = False
                     else:
                         if event.type == buttonRect.collidepoint(mousePos):
-                            button = pygame.image.load("startbuttonp.png")
+                            screen.blit(buttonp)
         return running
     def draw_titlescreen():
         running = True
