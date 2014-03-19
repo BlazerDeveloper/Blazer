@@ -1,6 +1,7 @@
-import sys, pygame
-from pygame.locals import *
+import sys
+import pygame
 import vector
+from pygame.locals import *
 
 DIVISION = 2
 TUX_STARTING_LOC = (700, 300)
@@ -40,6 +41,7 @@ walltop_rect = walltop.get_rect(walltop_size)
 tux = facings[FACING_DOWN]
 tux_rect = tux.get_rect(TUX_STARTING_LOC)
 
+<<<<<<< HEAD
 
 button = pygame.image.load(os.path.join("resources",'Startbutton.png'))
 buttonRect = button.get_rect(centerx=400, centery=400)
@@ -80,15 +82,54 @@ def do_titlescreen():
                 screen.blit(button, buttonRect)
                 screen.blit(button2, button2Rect)
                 pygame.display.update()
+=======
 
+def do_titlescreen():
+    running = True
+>>>>>>> b442316d77f325e531a0010ce6c976b0bb4b2110
+
+    def init():
+        # do all the loading for your titlescreen here
+        pass
+
+    def handle_input():
+        for event in pygame.event.get():
+            mousePos = pygame.mouse.get_pos()
+            if event.type == pygame.QUIT:
+                sys.exit()
+            if event.type == MOUSEBUTTONDOWN and button2Rect.collidepoint(mousePos):
+                sys.exit()
+            if event.type == buttonRect.collidepoint(mousePos):
+                button = pygame.image.load('startbuttonp.png')
+            if event.type == MOUSEBUTTONDOWN and buttonRect.collidepoint(mousePos):
+                running = False
+            else:
+                if event.type == buttonRect.collidepoint(mousePos):
+                    button = pygame.image.load("startbuttonp.png")
+
+    def draw():
+        pygame.display.toggle_fullscreen()
+        screen.fill((0, 255, 0))
+        screen.blit(title, titleRect)
+        screen.blit(button, buttonRect)
+        screen.blit(button2, button2Rect)
+        pygame.display.update()
+
+    # the main loop for the titlescreen
+    init()
     while running:
-        handle_titlescreen_input()
-        draw_titlescreen()
+        handle_input()
+        draw()
+
 
 def do_ingame():
     running = True
-    
-    def draw_ingame():           
+
+    def init():
+        # do all your image loading for the game here
+        pass
+
+    def draw():
         tux_loc = vector.adding(tux_loc, vector.adding(vx, vy))
         camera_corner = vector.subtracting(tux_loc, half_screen)
         camera_rect = pygame.Rect(camera_corner, size)
@@ -98,7 +139,7 @@ def do_ingame():
         screen.blit(walltop, vector.subtracting((5,5),camera_corner))
         pygame.display.flip()
         
-    def handle_ingame_input():
+    def handle_input():
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 sys.exit()
@@ -122,25 +163,33 @@ def do_ingame():
                     vx = (0, 0)
                 if event.key == K_d:
                     vx = (0, 0)
-        if vx > (0, 0):
-            if vy > (0, 0):
-                tux = facings[FACING_DWNRIGHT]
-            elif vy < (0, 0):
-                tux = facings[FACING_UPRIGHT]
-            else:
-                tux = facings[FACING_RIGHT]
-        elif vx < (0, 0):
-            if vy > (0, 0):
-                tux = facings[FACING_DWNLEFT]
-            elif vy < (0, 0):
-                tux = facings[FACING_UPLEFT]
-            else:
-                tux = facings[FACING_LEFT]
-        else:
-            if vy > (0, 0):
-                tux = facings[FACING_DOWN]
-            elif vy < (0, 0):
-                tux = facings[FACING_FORWARD]
 
-    while running:
-        do_ingame()
+            if vx > (0, 0):
+                if vy > (0, 0):
+                    tux = facings[FACING_DWNRIGHT]
+                elif vy < (0, 0):
+                    tux = facings[FACING_UPRIGHT]
+                else:
+                    tux = facings[FACING_RIGHT]
+            elif vx < (0, 0):
+                if vy > (0, 0):
+                    tux = facings[FACING_DWNLEFT]
+                elif vy < (0, 0):
+                    tux = facings[FACING_UPLEFT]
+                else:
+                    tux = facings[FACING_LEFT]
+            else:
+                if vy > (0, 0):
+                    tux = facings[FACING_DOWN]
+                elif vy < (0, 0):
+                    tux = facings[FACING_FORWARD]
+
+        # this is the main loop for the game
+        init()
+        while running:
+            handle_input()
+            draw()
+
+if __name__ == "__main__":
+    do_titlescreen()
+    do_ingame()
