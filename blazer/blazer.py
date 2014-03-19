@@ -21,16 +21,17 @@ FACING_DWNLEFT = 5
 FACING_UPRIGHT = 6
 FACING_DWNRIGHT = 7
 
+facing_files = ["tux.png","tuxright.png","tuxdown.png","tuxleft.png",'tuxupleft.png','tuxdwnleft.png','tuxupright.png','tuxdwnright.png']
+
 pygame.init()
 def load_image(filename):
-    pygame.image.load(os.path.join ("resources","filename"))
+    return pygame.image.load(os.path.join ("resources",filename))
 
 Icon = load_image("Icon.png")
 pygame.display.set_caption("Blazer: Trails Unknown")
 pygame.display.set_icon(Icon)
 
-facings = [ pygame.image.load(os.path.join("resources","tux.png")), pygame.image.load(os.path.join("resources","tuxright.png")), pygame.image.load(os.path.join("resources","tuxdown.png")), pygame.image.load(os.path.join("resources","tuxleft.png")), pygame.image.load(os.path.join("resources","tuxupleft.png")), pygame.image.load(os.path.join("resources","tuxdwnlft.png")), pygame.image.load(os.path.join("resources","tuxupright.png")), pygame.image.load(os.path.join("resources","tuxdownright.png"))]
-
+facings = [ load_image(x) for x in facing_files]
 screen = pygame.display.set_mode(DISPLAY_SIZE) 
 background1= load_image('background1.png')
 background1_rect = background1.get_rect(centerx=400, centery=300)
@@ -42,8 +43,6 @@ walltop_rect = walltop.get_rect(walltop_size)
 
 tux = facings[FACING_DOWN]
 tux_rect = tux.get_rect(TUX_STARTING_LOC)
-
-<<<<<<< HEAD
 
 button = load_image('Startbutton.png')
 buttonRect = button.get_rect(centerx=400, centery=400)
@@ -84,11 +83,9 @@ def do_titlescreen():
                 screen.blit(button, buttonRect)
                 screen.blit(button2, button2Rect)
                 pygame.display.update()
-=======
 
 def do_titlescreen():
     running = True
->>>>>>> b442316d77f325e531a0010ce6c976b0bb4b2110
 
     def init():
         # do all the loading for your titlescreen here
