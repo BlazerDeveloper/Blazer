@@ -129,14 +129,14 @@ class Ingame:
                 if self.vy > (0, 0):
                     self.tux = self.facings[FACING_DWNLEFT]
                 elif self.vy < (0, 0):
-                    self.ttux = self.facings[FACING_UPLEFT]
+                    self.tux = self.facings[FACING_UPLEFT]
                 else:
-                    self.ttux = self.facings[FACING_LEFT]
+                    self.tux = self.facings[FACING_LEFT]
             else:
                 if self.vy > (0, 0):
-                    self.ttux = self.facings[FACING_DOWN]
+                    self.tux = self.facings[FACING_DOWN]
                 elif self.vy < (0, 0):
-                    self.ttux = self.facings[FACING_FORWARD]
+                    self.tux = self.facings[FACING_FORWARD]
 
     def run(self):
         while self.running:
