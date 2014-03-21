@@ -67,8 +67,10 @@ class Titlescreen:
             self.handle_input()
             self.draw()
             pygame.display.flip()
-
-
+class WallSprite(pygame.sprite.Sprite):
+    def __init__(self):
+        self.image = load_image("walltop.png")
+        self.rect = self.image.get_rect()
 class Ingame:
     def __init__(self):
         self.running = True
