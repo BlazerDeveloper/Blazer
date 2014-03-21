@@ -135,7 +135,7 @@ class Ingame:
         self.tux.rect.center = vector.adding(self.tux.rect.center, vector.adding(self.vx, self.vy))
         if self.tux.rect.colliderect(self.walltop.rect):
             self.tux.rect.center = TUX_STARTING_LOC
-        if not self.background1_rect.contains(self.tux.rect):
+        if not self.background1_rect.colliderect(self.tux.rect):
             self.tux.rect.center = TUX_STARTING_LOC
 
     def draw(self):
