@@ -74,6 +74,8 @@ class TuxSprite(pygame.sprite.Sprite):
         pygame.sprite.Sprite.__init__(self)
         self.image = load_image("tux.png")
         self.rect = self.image.get_rect(x=700, y=300)
+        self.facing_files = ["tux.png", "tuxright.png", "tuxdown.png", "tuxleft.png", 'tuxupleft.png', 'tuxdwnlft.png',
+                'tuxupright.png', 'tuxdownright.png']
 
     def update(self, dt=0):
         pass
@@ -98,10 +100,8 @@ class Ingame:
         self.background1 = load_image('background1.png')
         self.background1_rect = self.background1.get_rect(centerx=400, centery=300)
         self.half_screen = vector.dividing(DISPLAY_SIZE, DIVISION)
-        self.walltop = load_image("walltop.png")
-        self.tux = self.facings[FACING_DOWN]
-        self.tux_rect = self.tux.get_rect(x=700, y=300)
-        self.walltop_rect = self.walltop.get_rect(centerx=400, centery=100)
+        self.walltop = WallSprite()
+        self.tux = TuxSprite()
         self.vx = (0, 0)
         self.vy = (0, 0)
         self.tux_loc = (700, 300)
