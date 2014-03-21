@@ -4,7 +4,6 @@ import vector
 import os
 from pygame.locals import *
 
-
 DIVISION = 2
 TUX_STARTING_LOC = (700, 300)
 NOTHING = (-1, -1)
@@ -79,20 +78,22 @@ class Ingame:
         self.half_screen = vector.dividing(DISPLAY_SIZE, DIVISION)
         self.walltop = load_image("walltop.png")
         self.tux = self.facings[FACING_DOWN]
-        self.tux_rect = self.tux.get_rect()
+        self.tux_rect = self.tux.get_rect(x = 700, y = 300)
+        self.walltop_rect = self.walltop.get_rect(centerx = 400, centery = 100)
         self.vx = (0, 0)
         self.vy = (0, 0)
+        self.tux_loc = (700, 300)
+        self.DISPLAY_SIZE = DISPLAY_WIDTH, DISPLAY_HEIGHT = 800, 600
 
     def draw(self):
-        self.tux_loc = vector.adding(self.tux_loc, vector.adding(vx, vy))
+        self.tux_loc = vector.adding(self.tux_loc, vector.adding(self.vx, self.vy))
         self.camera_corner = vector.subtracting(self.tux_loc, self.half_screen)
-        self.camera_rect = pygame.Rect(self.camera_corner, size)
-        clamped_camera_rect = camera_rect.clamp(background1.get_rect())
-        screen.blit(self.background1, vector.subtracting((0, 0), camera_corner))
-        screen.blit(self.tux, vector.subtracting(tux_loc, clamped_camera_rect.topleft))
-        screen.blit(self.walltop, vector.subtracting((5, 5), camera_corner))
+        self.camera_rect = pygame.Rect(self.camera_corner, self.DISPLAY_SIZE)
+        self.clamped_camera_rect = self.camera_rect.clamp(self.background1.get_rect())
+        screen.blit(self.background1, vector.subtracting((0, 0), self.camera_corner))
+        screen.blit(self.tux, vector.subtracting(self.tux_loc, self.clamped_camera_rect.topleft))
+        screen.blit(self.walltop, vector.subtracting((5, 5), self.camera_corner))
         pygame.display.flip()
-
     def handle_input(self):
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -137,7 +138,9 @@ class Ingame:
                     self.tux = self.facings[FACING_DOWN]
                 elif self.vy < (0, 0):
                     self.tux = self.facings[FACING_FORWARD]
-
+            print(self.tux_rect)
+            if self.tux_rect.colliderect(self.walltop_rect):
+                self.tux_loc = (700, 300)
     def run(self):
         while self.running:
             self.handle_input()
