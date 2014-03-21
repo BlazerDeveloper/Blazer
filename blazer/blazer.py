@@ -5,7 +5,7 @@ import os
 from pygame.locals import *
 
 DIVISION = 2
-TUX_STARTING_LOC = (700, 300)
+TUX_STARTING_LOC = (400, 300)
 NOTHING = (-1, -1)
 DISPLAY_SIZE = DISPLAY_WIDTH, DISPLAY_HEIGHT = 800, 600
 MOVEMENT_SPEED = 5
@@ -75,7 +75,7 @@ class TuxSprite(pygame.sprite.Sprite):
     def __init__(self):
         pygame.sprite.Sprite.__init__(self)
         self.image = load_image("tux.png")
-        self.rect = self.image.get_rect(x=700, y=300)
+        self.rect = self.image.get_rect()
         self.facings = [load_image(x) for x in facing_files]
 
     def update(self, dt=0):
@@ -84,23 +84,24 @@ class TuxSprite(pygame.sprite.Sprite):
     def change_facing(self, vx, vy):
         if vx > (0, 0):
             if vy > (0, 0):
-                self.sprite = self.facings[FACING_DWNRIGHT]
+                self.image = self.facings[FACING_DWNRIGHT]
             elif vy < (0, 0):
-                self.sprite = self.facings[FACING_UPRIGHT]
+                self.image = self.facings[FACING_UPRIGHT]
             else:
-                self.sprite = self.facings[FACING_RIGHT]
+                self.image = self.facings[FACING_RIGHT]
         elif vx < (0, 0):
             if vy > (0, 0):
-                self.sprite = self.facings[FACING_DWNLEFT]
+                self.image = self.facings[FACING_DWNLEFT]
             elif vy < (0, 0):
-                self.sprite = self.facings[FACING_UPLEFT]
+                self.image = self.facings[FACING_UPLEFT]
             else:
-                self.sprite = self.facings[FACING_LEFT]
+                self.image = self.facings[FACING_LEFT]
         else:
             if vy > (0, 0):
-                self.sprite = self.facings[FACING_DOWN]
+                self.image = self.facings[FACING_DOWN]
             elif vy < (0, 0):
-                self.sprite = self.facings[FACING_FORWARD]
+                self.image = self.facings[FACING_FORWARD]
+
 
 class WallSprite(pygame.sprite.Sprite):
     def __init__(self):
@@ -110,6 +111,7 @@ class WallSprite(pygame.sprite.Sprite):
 
     def update(self, dt=0):
         pass
+
 
 class Ingame:
     def __init__(self):
@@ -121,6 +123,7 @@ class Ingame:
 
         self.walltop = WallSprite()
         self.tux = TuxSprite()
+        self.tux.rect.center = TUX_STARTING_LOC
 
         self.vx = (0, 0)
         self.vy = (0, 0)
@@ -131,16 +134,18 @@ class Ingame:
         #self.group.update(dt)
         self.tux.rect.center = vector.adding(self.tux.rect.center, vector.adding(self.vx, self.vy))
         if self.tux.rect.colliderect(self.walltop.rect):
-            self.tux.rect.center = (700, 300)
+            self.tux.rect.center = TUX_STARTING_LOC
+        if not self.background1_rect.contains(self.tux.rect):
+            self.tux.rect.center = TUX_STARTING_LOC
 
     def draw(self):
         camera_corner = vector.subtracting(self.tux.rect.center, self.half_screen)
         camera_rect = pygame.Rect(camera_corner, self.DISPLAY_SIZE)
         clamped_camera_rect = camera_rect.clamp(self.background1.get_rect())
 
-        screen.blit(self.background1, (0, 0), camera_corner)
+        screen.blit(self.background1, ((0, 0), camera_corner))
         screen.blit(self.tux.image, vector.subtracting(self.tux.rect.center, clamped_camera_rect.topleft))
-        screen.blit(self.walltop.image, (5, 5), camera_corner)
+        screen.blit(self.walltop.image, ((5, 5), camera_corner))
 
         pygame.display.flip()
 
@@ -169,7 +174,7 @@ class Ingame:
                 if event.key == K_d:
                     self.vx = (0, 0)
 
-            self.tux.change_facing(self.vx, self.vy)
+        self.tux.change_facing(self.vx, self.vy)
 
     def run(self):
         while self.running:
