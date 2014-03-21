@@ -67,16 +67,30 @@ class Titlescreen:
             self.handle_input()
             self.draw()
             pygame.display.flip()
+
+
 class TuxSprite(pygame.sprite.Sprite):
     def __init__(self):
-        Sprite.__init__(self)
+        pygame.sprite.Sprite.__init__(self)
         self.image = load_image("tux.png")
-        self.rect = self.image.get_rect()
+        self.rect = self.image.get_rect(x=700, y=300)
+
+    def update(self, dt=0):
+        pass
+
+    def handle_input(self, event):
+        pass
+
+
 class WallSprite(pygame.sprite.Sprite):
     def __init__(self):
-        Sprite.__init__(self)
+        pygame.sprite.Sprite.__init__(self)
         self.image = load_image("walltop.png")
-        self.rect = self.image.get_rect()
+        self.rect = self.image.get_rect(centerx=400, centery=100)
+
+    def update(self, dt=0):
+        pass
+
 class Ingame:
     def __init__(self):
         self.running = True
@@ -86,8 +100,8 @@ class Ingame:
         self.half_screen = vector.dividing(DISPLAY_SIZE, DIVISION)
         self.walltop = load_image("walltop.png")
         self.tux = self.facings[FACING_DOWN]
-        self.tux_rect = self.tux.get_rect(x = 700, y = 300)
-        self.walltop_rect = self.walltop.get_rect(centerx = 400, centery = 100)
+        self.tux_rect = self.tux.get_rect(x=700, y=300)
+        self.walltop_rect = self.walltop.get_rect(centerx=400, centery=100)
         self.vx = (0, 0)
         self.vy = (0, 0)
         self.tux_loc = (700, 300)
@@ -102,6 +116,7 @@ class Ingame:
         screen.blit(self.tux, vector.subtracting(self.tux_loc, self.clamped_camera_rect.topleft))
         screen.blit(self.walltop, vector.subtracting((5, 5), self.camera_corner))
         pygame.display.flip()
+
     def handle_input(self):
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -149,6 +164,7 @@ class Ingame:
             print(self.tux_rect)
             if self.tux_rect.colliderect(self.walltop_rect):
                 self.tux_loc = (700, 300)
+
     def run(self):
         while self.running:
             self.handle_input()
