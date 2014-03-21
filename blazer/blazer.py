@@ -67,8 +67,14 @@ class Titlescreen:
             self.handle_input()
             self.draw()
             pygame.display.flip()
+class TuxSprite(pygame.sprite.Sprite):
+    def __init__(self):
+        Sprite.__init__(self)
+        self.image = load_image("tux.png")
+        self.rect = self.image.get_rect()
 class WallSprite(pygame.sprite.Sprite):
     def __init__(self):
+        Sprite.__init__(self)
         self.image = load_image("walltop.png")
         self.rect = self.image.get_rect()
 class Ingame:
